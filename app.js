@@ -5,10 +5,25 @@
   var btn = document.getElementById('searchBtn');
   var statusEl = document.getElementById('status');
   var resultsEl = document.getElementById('results');
+  var todayBadgeEl = document.getElementById('todayBadge');
 
   if (cfg.COLLEGE_NAME) document.getElementById('collegeName').textContent = cfg.COLLEGE_NAME;
 
-  // Allow direct links like ?reg=MM25CCAR001
+  // Format today's date as DD-MM-YYYY (e.g. 28-10-2026) to match the Google Sheet tab name
+  function getTodaySheetName() {
+    var d = new Date();
+    var dd = String(d.getDate()).padStart(2, '0');
+    var mm = String(d.getMonth() + 1).padStart(2, '0');
+    var yyyy = d.getFullYear();
+    return dd + '-' + mm + '-' + yyyy;
+  }
+
+  var todaySheet = getTodaySheetName();
+  if (todayBadgeEl) {
+    todayBadgeEl.textContent = "Today's Exam Date: " + todaySheet;
+  }
+
+  // Allow direct links like ?reg=C5PSCS2101
   var params = new URLSearchParams(location.search);
   if (params.get('reg')) { input.value = params.get('reg'); search(params.get('reg')); }
 
@@ -28,10 +43,11 @@
     });
   }
 
-  // "25/09/2026" -> Date
-  function parseDate(s) {
-    var m = String(s).match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
-    return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null;
+  // Normalize any date string ("28/10/2026" or "28-10-2026") to "DD-MM-YYYY"
+  function normalizeDateTab(s) {
+    var m = String(s || '').trim().match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+    if (!m) return '';
+    return m[1].padStart(2, '0') + '-' + m[2].padStart(2, '0') + '-' + m[3];
   }
 
   function search(raw) {
@@ -42,15 +58,24 @@
       return;
     }
 
+    var currentToday = getTodaySheetName();
     btn.disabled = true;
     resultsEl.innerHTML = '';
-    setStatus('Searching seat allocation for ' + reg + '...');
+    setStatus('Searching today\'s (' + currentToday + ') seat allocation for ' + reg + '...');
 
-    fetch(cfg.WEB_APP_URL + '?reg=' + encodeURIComponent(reg))
+    var url = cfg.WEB_APP_URL + '?reg=' + encodeURIComponent(reg) + '&date=' + encodeURIComponent(currentToday);
+
+    fetch(url)
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.status !== 'success') throw new Error(data.error || 'Server error');
-        render(reg, data.results || []);
+        // Strictly filter to ONLY today's exam sheet (e.g. 28-10-2026)
+        var targetTab = data.today || currentToday;
+        var filtered = (data.results || []).filter(function (item) {
+          var itemTab = normalizeDateTab(item.date);
+          return !itemTab || itemTab === targetTab;
+        });
+        render(reg, filtered, targetTab);
       })
       .catch(function (err) {
         console.error(err);
@@ -59,31 +84,20 @@
       .then(function () { btn.disabled = false; });
   }
 
-  function render(reg, list) {
+  function render(reg, list, todayTab) {
     if (!list.length) {
-      setStatus('No seat allocation found for ' + reg + '. Check the register number, or seats may not be published yet.', true);
+      setStatus('No seat allocation found for ' + reg + ' on today\'s exam date (' + todayTab + '). Seat allocations are visible only on the day of the examination.', true);
       return;
     }
 
-    var today = new Date(); today.setHours(0, 0, 0, 0);
-    // Upcoming exams first (nearest date first), then past exams
-    list.sort(function (a, b) {
-      var da = parseDate(a.date) || 0, db = parseDate(b.date) || 0;
-      var pa = da < today, pb = db < today;
-      if (pa !== pb) return pa ? 1 : -1;
-      return pa ? db - da : da - db;
-    });
-
-    setStatus('Found ' + list.length + ' exam seat' + (list.length > 1 ? 's' : '') + ' for ' + reg);
+    setStatus('Found ' + list.length + ' seat allocation' + (list.length > 1 ? 's' : '') + ' for ' + reg + ' (' + todayTab + ')');
 
     resultsEl.innerHTML = list.map(function (s) {
-      var d = parseDate(s.date);
-      var isPast = d && d < today;
-      var isToday = d && d.getTime() === today.getTime();
-      return '<article class="card seat-card' + (isPast ? ' past' : '') + '">' +
-        '<div class="date">' + escapeHtml(s.date) +
+      var displayDate = String(s.date || todayTab).replace(/\//g, '-');
+      return '<article class="card seat-card">' +
+        '<div class="date">' + escapeHtml(displayDate) +
           (s.session ? ' <span>&middot; ' + escapeHtml(s.session) + '</span>' : '') +
-          (isToday ? '<span class="badge">TODAY</span>' : '') +
+          '<span class="badge">TODAY</span>' +
         '</div>' +
         '<div class="course">' + escapeHtml(s.course_name || s.course_code) +
           (s.course_code && s.course_name ? '<small>' + escapeHtml(s.course_code) + '</small>' : '') +
