@@ -70,3 +70,8 @@ body {
   color: #334155; font-size: .82rem;
 }
 .foot .tagline strong { color: #4f46e5; font-weight: 700; }
+.row-desk-label {
+  margin-top: 6px;
+  font-size: inherit;
+  font-weight: inherit;
+}
