@@ -102,9 +102,13 @@
         '<div class="course">' + escapeHtml(s.course_name || s.course_code) +
           (s.course_code && s.course_name ? '<small>' + escapeHtml(s.course_code) + '</small>' : '') +
         '</div>' +
+       
         '<div class="grid">' +
-          '<div class="box"><div class="k">Room</div><div class="v">' + escapeHtml(s.room) + '</div></div>' +
-            '<div class="box">' +
+          '<div class="box">' +
+            '<div class="k">Room</div>' +
+            '<div class="v">' + escapeHtml(s.room) + '</div>' +
+          '</div>' +
+          '<div class="box">' +
             '<div class="k">Seat No</div>' +
             '<div class="v">' + escapeHtml(s.seat) + '</div>' +
             '<div class="k row-desk-label">' +
@@ -112,6 +116,8 @@
             '</div>' +
           '</div>' +
         '</div>' +
+
+
       '</article>';
     }).join('');
   }
