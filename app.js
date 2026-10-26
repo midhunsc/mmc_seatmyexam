@@ -9,7 +9,7 @@
 
   if (cfg.COLLEGE_NAME) document.getElementById('collegeName').textContent = cfg.COLLEGE_NAME;
 
-  // Format today's date as DD-MM-YYYY (e.g. 28-10-2026) to match the Google Sheet tab name
+  // Format today's date as DD-MM-YYYY (e.g. 28-10-2026) to match the Google Sheet tab name updated
   function getTodaySheetName() {
     var d = new Date();
     var dd = String(d.getDate()).padStart(2, '0');
