@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Seat Finder | Mary Matha Arts & Science College</title>
+  <meta name="description" content="Find your examination room and seat number by entering your register number." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="brand">
+      <div class="logo">🎓</div>
+      <h1 id="collegeName">Mary Matha Arts &amp; Science College, Mananthavady</h1>
+      <p class="sub">Examination Seat Finder</p>
+    </header>
+
+    <form id="searchForm" class="card search" autocomplete="off">
+      <label for="regInput">Enter your Register Number</label>
+      <div class="row">
+        <input id="regInput" type="text" placeholder="e.g. MM25CCAR001" required
+               autocapitalize="characters" spellcheck="false" />
+        <button id="searchBtn" type="submit">Find My Seat</button>
+      </div>
+    </form>
+
+    <section id="status" class="status" aria-live="polite"></section>
+    <section id="results" class="results"></section>
+
+    <footer class="foot">Seat details are updated by the Examination Cell. Please verify at the notice board.</footer>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
