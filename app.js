@@ -104,7 +104,13 @@
         '</div>' +
         '<div class="grid">' +
           '<div class="box"><div class="k">Room</div><div class="v">' + escapeHtml(s.room) + '</div></div>' +
-          '<div class="box"><div class="k">Seat No</div><div class="v">' + escapeHtml(s.seat) + '</div></div>' +
+            '<div class="box">' +
+            '<div class="k">Seat No</div>' +
+            '<div class="v">' + escapeHtml(s.seat) + '</div>' +
+            '<div class="k row-desk-label">' +
+              escapeHtml(s['Row / Desk'] || '') +
+            '</div>' +
+          '</div>' +
         '</div>' +
       '</article>';
     }).join('');
