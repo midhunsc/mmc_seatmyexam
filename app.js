@@ -112,7 +112,7 @@
             '<div class="k">Seat No</div>' +
             '<div class="v">' + escapeHtml(s.seat) + '</div>' +
             '<div class="k row-desk-label">' +
-              escapeHtml(s['Row / Desk'] || '') +
+              escapeHtml(s.row_desk || '') +
             '</div>' +
           '</div>' +
         '</div>' +
