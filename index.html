@@ -15,12 +15,13 @@
       <div class="logo">🎓</div>
       <h1 id="collegeName">Mary Matha Arts &amp; Science College, Mananthavady</h1>
       <p class="sub">Examination Seat Finder</p>
+      <div id="todayBadge" class="today-pill"></div>
     </header>
 
     <form id="searchForm" class="card search" autocomplete="off">
       <label for="regInput">Enter your Register Number</label>
       <div class="row">
-        <input id="regInput" type="text" placeholder="e.g. MM25CCAR001" required
+        <input id="regInput" type="text" placeholder="e.g. C5PSCS2101" required
                autocapitalize="characters" spellcheck="false" />
         <button id="searchBtn" type="submit">Find My Seat</button>
       </div>
@@ -29,7 +30,10 @@
     <section id="status" class="status" aria-live="polite"></section>
     <section id="results" class="results"></section>
 
-    <footer class="foot">Seat details are updated by the Examination Cell. Please verify at the notice board.</footer>
+    <footer class="foot">
+      <p>Seat details are displayed only on the day of the examination. Please verify at the notice board.</p>
+      <p class="tagline">Designed and maintained by <strong>IT Club @ MMC</strong></p>
+    </footer>
   </main>
 
   <script src="config.js"></script>
