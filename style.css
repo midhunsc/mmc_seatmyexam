@@ -75,3 +75,9 @@ body {
   font-size: inherit;
   font-weight: inherit;
 }
+.student-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin: 8px 0 12px;
+}
