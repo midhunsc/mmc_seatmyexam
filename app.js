@@ -99,6 +99,9 @@
           (s.session ? ' <span>&middot; ' + escapeHtml(s.session) + '</span>' : '') +
           '<span class="badge">TODAY</span>' +
         '</div>' +
+        '<div class="student-name">' +
+          escapeHtml(s.student_name || '') +
+        '</div>' +
         '<div class="course">' + escapeHtml(s.course_name || s.course_code) +
           (s.course_code && s.course_name ? '<small>' + escapeHtml(s.course_code) + '</small>' : '') +
         '</div>' +
